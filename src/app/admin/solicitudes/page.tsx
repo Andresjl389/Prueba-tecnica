@@ -6,15 +6,8 @@ import { AdminSolicitudesFilters } from "@/componentes/AdminSolicitudesFilters";
 import { AdminSolicitudesTable } from "@/componentes/AdminSolicitudesTable";
 import { fetchSolicitudesAdmin, type Solicitud } from "@/services/solicitudes";
 
-type Cliente = {
-  id: number;
-  nombre: string;
-  role: { nombre: string };
-};
-
 export default function SolicitudesAdmin() {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
-  const [clientes, setClientes] = useState<Cliente[]>([]);
 
   const [estado, setEstado] = useState("");
   const [clienteId, setClienteId] = useState("");

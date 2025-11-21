@@ -3,11 +3,6 @@
 import { Button } from "@/componentes/forms/button";
 import { Input } from "@/componentes/forms/input";
 
-type Cliente = {
-  id: number;
-  nombre: string;
-};
-
 type Props = {
   estado: string;
   clienteNombre: string;
