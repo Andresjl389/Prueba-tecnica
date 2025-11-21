@@ -64,7 +64,6 @@ export async function verifySessionToken(
   const [encoded, signature] = token.split(".");
   if (!encoded || !signature) return null;
   const expected = await sign(encoded);
-  // timing safe compare
   const a = expected.length;
   const b = signature.length;
   if (a !== b) return null;

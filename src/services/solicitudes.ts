@@ -21,6 +21,16 @@ export async function fetchSolicitudesCliente(): Promise<Solicitud[]> {
   return res.json();
 }
 
+export async function fetchSolicitudesSoporte(): Promise<Solicitud[]> {
+  const res = await fetch("/api/solicitudes", {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("No se pudieron obtener las solicitudes");
+  }
+  return res.json();
+}
+
 export async function crearSolicitudCliente(payload: {
   titulo: string;
   descripcion: string;

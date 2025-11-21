@@ -17,10 +17,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
+  const where =
+    session.role === "SOPORTE"
+      ? { soporteId: session.id }
+      : session.role === "ADMIN"
+        ? {}
+        : { clienteId: session.id };
+
   const solicitudes = await prisma.solicitud.findMany({
-    where: {
-      clienteId: session.id,
-    },
+    where,
     orderBy: { id: "desc" },
     include: {
       cliente: true,
@@ -39,12 +44,20 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
+  const soporte = await prisma.usuario.findFirst({
+    where: { role: { nombre: "SOPORTE" } },
+    orderBy: {
+      asignadas: { _count: "asc" },
+    },
+    select: { id: true },
+  });
+
   const nueva = await prisma.solicitud.create({
     data: {
       titulo: body.titulo,
       descripcion: body.descripcion,
       clienteId: session.id,
-      soporteId: body.soporteId ?? null,
+      soporteId: soporte?.id ?? null,
     },
   });
 

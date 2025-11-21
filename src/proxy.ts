@@ -24,7 +24,6 @@ export default async function proxy(req: NextRequest) {
   const sessionToken = req.cookies.get("session")?.value;
   const session = await verifySessionToken(sessionToken);
 
-  // Si está autenticado y quiere ir al login o raíz, redirige a su home
   if (session && (pathname === "/" || pathname.startsWith("/login"))) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = homeByRole(session.role);
@@ -32,7 +31,6 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Rutas públicas accesibles si no hay sesión que redirigir
   if (!isProtected || isPublic) return NextResponse.next();
 
   if (session) return NextResponse.next();

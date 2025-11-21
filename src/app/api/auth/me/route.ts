@@ -20,6 +20,6 @@ export async function GET(req: NextRequest) {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { contraseña, ...safeUser } = user;
+  const { contraseña: _omit, ...safeUser } = user;
   return NextResponse.json(safeUser);
 }

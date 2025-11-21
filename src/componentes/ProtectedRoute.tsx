@@ -28,7 +28,6 @@ export default function ProtectedRoute({
       try {
         let currentUser: User | null = user;
 
-        // Si no hay usuario en el contexto, rehidrata desde la sesión en el servidor
         if (!currentUser) {
           const res = await fetch("/api/auth/me", {
             credentials: "include",
@@ -47,7 +46,6 @@ export default function ProtectedRoute({
           return;
         }
 
-        // Validar rol si se requiere
         if (roles && roles.length > 0) {
           const allowed = roles.includes(currentUser.role.nombre);
           if (!allowed) {

@@ -3,21 +3,20 @@
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchSolicitudesCliente, type Solicitud } from "@/services/solicitudes";
-
-// icon list?
-
-const statusStyles: Record<string, string> = {
-  PENDIENTE: "border-amber-200 bg-amber-50 text-amber-700",
-  EN_PROCESO: "border-blue-200 bg-blue-50 text-blue-700",
-  RESUELTA: "border-emerald-200 bg-emerald-50 text-emerald-700",
-};
+import {
+  fetchSolicitudesCliente,
+  type Solicitud,
+} from "@/services/solicitudes";
+import { SolicitudCard } from "@/componentes/SolicitudCard";
 
 export default function MisSolicitudes() {
   const { user } = useAuth();
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState<{ type: "error" | "success"; message: string } | null>(null);
+  const [toast, setToast] = useState<{
+    type: "error" | "success";
+    message: string;
+  } | null>(null);
 
   const showToast = (type: "error" | "success", message: string) => {
     setToast({ type, message });
@@ -42,10 +41,6 @@ export default function MisSolicitudes() {
 
     load();
   }, [user?.id]);
-
-  const badgeClass = (estado: string) =>
-    `inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${statusStyles[estado] ?? "border-gray-200 bg-gray-50 text-gray-700"}`;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <AnimatePresence>
@@ -75,7 +70,8 @@ export default function MisSolicitudes() {
           <p className="text-sm font-semibold text-emerald-600">Mis tickets</p>
           <h1 className="text-3xl font-bold text-gray-900">Solicitudes</h1>
           <p className="text-sm text-gray-600">
-            Revisa cada solicitud, su estado y las respuestas del equipo de soporte.
+            Revisa cada solicitud, su estado y las respuestas del equipo de
+            soporte.
           </p>
         </motion.div>
 
@@ -109,31 +105,8 @@ export default function MisSolicitudes() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.25 }}
-                className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow transition hover:-translate-y-1 hover:shadow-lg"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {s.titulo}
-                  </h2>
-                  <span className={badgeClass(s.estado)}>
-                    <span className="h-2 w-2 rounded-full bg-current opacity-70" />
-                    {s.estado.replace("_", " ")}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm text-gray-700">{s.descripcion}</p>
-
-                {s.respuesta && (
-                  <motion.div
-                    initial={{ opacity: 0.8, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-4 rounded-xl bg-gray-50 px-3 py-2 text-sm text-gray-700"
-                  >
-                    <p className="font-semibold text-gray-900">
-                      Respuesta del soporte
-                    </p>
-                    <p className="text-gray-700">{s.respuesta}</p>
-                  </motion.div>
-                )}
+                <SolicitudCard solicitud={s} showRespuesta />
               </motion.div>
             ))}
           </motion.div>

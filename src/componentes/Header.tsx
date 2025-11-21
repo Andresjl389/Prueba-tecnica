@@ -11,7 +11,10 @@ const navByRole: Record<string, { label: string; href: string }[]> = {
     { label: "Crear", href: "/cliente/crear" },
     { label: "Solicitudes", href: "/cliente/solicitudes" },
   ],
-  SOPORTE: [{ label: "Soporte", href: "/soporte" }],
+  SOPORTE: [
+    { label: "Inicio", href: "/soporte" },
+    { label: "Solicitudes", href: "/soporte/solicitudes" },
+  ],
   ADMIN: [{ label: "Admin", href: "/admin" }],
 };
 
@@ -32,7 +35,6 @@ export default function Header() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
 
-  // No mostrar header en login/home
   if (pathname === "/" || pathname.startsWith("/login")) return null;
 
   const items = getNav(user?.role?.nombre);
@@ -74,7 +76,10 @@ export default function Header() {
             <>
               <Button
                 onClick={async () => {
-                  await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+                  await fetch("/api/auth/logout", {
+                    method: "POST",
+                    credentials: "include",
+                  });
                   logout();
                   window.location.href = "/";
                 }}
