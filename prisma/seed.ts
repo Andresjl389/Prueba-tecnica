@@ -10,32 +10,31 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // Ensure roles exist
   const [clienteRole, soporteRole, adminRole] = await Promise.all([
     prisma.role.upsert({
-      where: { name: "CLIENTE" },
+      where: { nombre: "CLIENTE" },
       update: {},
-      create: { name: "CLIENTE" },
+      create: { nombre: "CLIENTE" },
     }),
     prisma.role.upsert({
-      where: { name: "SOPORTE" },
+      where: { nombre: "SOPORTE" },
       update: {},
-      create: { name: "SOPORTE" },
+      create: { nombre: "SOPORTE" },
     }),
     prisma.role.upsert({
-      where: { name: "ADMIN" },
+      where: { nombre: "ADMIN" },
       update: {},
-      create: { name: "ADMIN" },
+      create: { nombre: "ADMIN" },
     }),
   ]);
 
-  // Seed users with their role relations
   await prisma.usuario.upsert({
     where: { email: "cliente@test.com" },
     update: {},
     create: {
       nombre: "Cliente Test",
       email: "cliente@test.com",
+      contraseña: "test123",
       roleId: clienteRole.id,
     },
   });
@@ -46,6 +45,7 @@ async function main() {
     create: {
       nombre: "Soporte Test",
       email: "soporte@test.com",
+      contraseña: "test123",
       roleId: soporteRole.id,
     },
   });
@@ -56,6 +56,7 @@ async function main() {
     create: {
       nombre: "Admin",
       email: "admin@test.com",
+      contraseña: "test123",
       roleId: adminRole.id,
     },
   });

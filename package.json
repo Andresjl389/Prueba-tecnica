@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
+    "framer-motion": "^12.23.24",
     "next": "16.0.3",
     "pg": "^8.16.3",
     "prisma": "^7.0.0",

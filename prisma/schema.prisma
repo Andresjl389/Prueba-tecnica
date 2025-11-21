@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "node"
 }
 
 datasource db {
@@ -13,39 +14,38 @@ datasource db {
 }
 
 model Usuario {
-  id          Int          @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   nombre      String
-  email       String       @unique
+  email       String @unique
+  contraseña  String
 
-  roleId      Int
-  role        Role         @relation(fields: [roleId], references: [id])
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id])
 
-  solicitudes Solicitud[]  @relation("SolicitudesCliente")
-  asignadas   Solicitud[]  @relation("SolicitudesSoporte")
+  solicitudes Solicitud[] @relation("SolicitudesCliente")
+  asignadas   Solicitud[] @relation("SolicitudesSoporte")
 }
 
-
 model Solicitud {
-  id          Int         @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   titulo      String
   descripcion String
-  estado      Estado      @default(PENDIENTE)
+  estado      Estado   @default(PENDIENTE)
   respuesta   String?
-  fecha       DateTime    @default(now())
+  fecha       DateTime @default(now())
 
   clienteId Int
-  cliente   Usuario      @relation("SolicitudesCliente", fields: [clienteId], references: [id])
+  cliente   Usuario @relation("SolicitudesCliente", fields: [clienteId], references: [id])
 
   soporteId Int?
-  soporte   Usuario?     @relation("SolicitudesSoporte", fields: [soporteId], references: [id])
+  soporte   Usuario? @relation("SolicitudesSoporte", fields: [soporteId], references: [id])
 }
 
 model Role {
-  id    Int      @id @default(autoincrement())
-  name  String   @unique
-  users Usuario[]
+  id       Int       @id @default(autoincrement())
+  nombre   String    @unique
+  usuarios Usuario[]
 }
-
 
 enum Estado {
   PENDIENTE
