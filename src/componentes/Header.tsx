@@ -15,7 +15,11 @@ const navByRole: Record<string, { label: string; href: string }[]> = {
     { label: "Inicio", href: "/soporte" },
     { label: "Solicitudes", href: "/soporte/solicitudes" },
   ],
-  ADMIN: [{ label: "Admin", href: "/admin" }],
+  ADMIN: [
+    { label: "Admin", href: "/admin" },
+    { label: "Solicitudes", href: "/admin/solicitudes" },
+    { label: "Dashboard", href: "/admin/dashboard" }
+  ],
 };
 
 function getNav(role?: string) {

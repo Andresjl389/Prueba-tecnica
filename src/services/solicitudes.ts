@@ -7,11 +7,13 @@ export type Solicitud = {
   estado: string;
   respuesta?: string | null;
   clienteId: number;
+  soporteId?: number | null;
+  fecha: string;
   cliente?: User;
   soporte?: User | null;
 };
 
-export async function fetchSolicitudesCliente(): Promise<Solicitud[]> {
+async function fetchSolicitudes(): Promise<Solicitud[]> {
   const res = await fetch("/api/solicitudes", {
     credentials: "include",
   });
@@ -21,29 +23,49 @@ export async function fetchSolicitudesCliente(): Promise<Solicitud[]> {
   return res.json();
 }
 
+export async function fetchSolicitudesCliente(): Promise<Solicitud[]> {
+  return fetchSolicitudes();
+}
+
 export async function fetchSolicitudesSoporte(): Promise<Solicitud[]> {
-  const res = await fetch("/api/solicitudes", {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    throw new Error("No se pudieron obtener las solicitudes");
-  }
-  return res.json();
+  return fetchSolicitudes();
+}
+
+export async function fetchSolicitudesAdmin(): Promise<Solicitud[]> {
+  return fetchSolicitudes();
 }
 
 export async function crearSolicitudCliente(payload: {
   titulo: string;
   descripcion: string;
-}) {
-  const res = await fetch("/api/solicitudes", {
+}): Promise<Solicitud> {
+  return sendSolicitudRequest<Solicitud>("/api/solicitudes", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
     body: JSON.stringify(payload),
   });
+}
 
+export async function actualizarSolicitud(
+  id: number,
+  fields: Partial<Pick<Solicitud, "estado" | "respuesta" | "titulo" | "descripcion">>
+): Promise<Solicitud> {
+  return sendSolicitudRequest<Solicitud>(`/api/solicitudes/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(fields),
+  });
+}
+
+async function sendSolicitudRequest<T>(url: string, options: RequestInit): Promise<T> {
+  const res = await fetch(url, {
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    ...options,
+  });
+
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error("No se pudo crear la solicitud");
+    const message = data?.error ?? "Error al procesar la solicitud";
+    throw new Error(message);
   }
-  return res.json();
+  return data as T;
 }

@@ -10,7 +10,7 @@
     "lint": "eslint"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.0.0",
@@ -22,6 +22,7 @@
     "prisma": "^7.0.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "recharts": "^3.4.1",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {

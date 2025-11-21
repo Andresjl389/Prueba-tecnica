@@ -10,6 +10,7 @@ export default function CrearSolicitud() {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<{ type: "error" | "success"; message: string } | null>(null);
 
   const showToast = (type: "error" | "success", message: string) => {
@@ -17,7 +18,25 @@ export default function CrearSolicitud() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const validate = () => {
+    const errors: Record<string, string> = {};
+    const tituloTrim = titulo.trim();
+    const descripcionTrim = descripcion.trim();
+
+    if (!tituloTrim) errors.titulo = "Agrega un título";
+    else if (tituloTrim.length < 4) errors.titulo = "Debe tener al menos 4 caracteres";
+
+    if (!descripcionTrim) errors.descripcion = "Describe el problema";
+    else if (descripcionTrim.length < 12)
+      errors.descripcion = "Agrega más detalle (mínimo 12 caracteres)";
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const crearSolicitud = async () => {
+    if (!validate()) return;
+    setFieldErrors({});
     setLoading(true);
 
     try {
@@ -91,6 +110,7 @@ export default function CrearSolicitud() {
               placeholder="Ej. Problema con el servicio"
               onChangeValue={setTitulo}
               required
+              error={fieldErrors.titulo}
             />
 
             <div className="space-y-2">
@@ -105,6 +125,11 @@ export default function CrearSolicitud() {
                 onChange={(e) => setDescripcion(e.target.value)}
                 required
               />
+              {fieldErrors.descripcion ? (
+                <p className="text-xs font-medium text-red-600">
+                  {fieldErrors.descripcion}
+                </p>
+              ) : null}
             </div>
 
             <Button onClick={crearSolicitud} disabled={loading} className="w-full">

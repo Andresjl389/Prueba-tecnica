@@ -3,7 +3,11 @@
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchSolicitudesSoporte, type Solicitud } from "@/services/solicitudes";
+import {
+  fetchSolicitudesSoporte,
+  actualizarSolicitud,
+  type Solicitud,
+} from "@/services/solicitudes";
 import { Button } from "@/componentes/forms/button";
 import { SolicitudCard } from "@/componentes/SolicitudCard";
 
@@ -49,16 +53,7 @@ export default function SolicitudesSoporte() {
   const updateSolicitud = async (id: number, fields: Partial<Solicitud>) => {
     setSavingId(id);
     try {
-      const res = await fetch(`/api/solicitudes/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fields),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error ?? "No se pudo actualizar");
-      }
-      const updated: Solicitud = await res.json();
+      const updated = await actualizarSolicitud(id, fields);
       setSolicitudes((prev) =>
         prev.map((s) => (s.id === id ? { ...s, ...updated } : s))
       );

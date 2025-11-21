@@ -33,8 +33,19 @@ export default function LoginPage() {
     setTimeout(() => setToast(null), 3500);
   };
 
+  const validate = () => {
+    const errors: Record<string, string> = {};
+    if (!email.trim()) errors.email = "Ingresa tu correo";
+    if (email && !email.includes("@")) errors.email = "Formato de correo inválido";
+    if (!password) errors.password = "Ingresa tu contraseña";
+    if (password && password.length < 6)
+      errors.password = "La contraseña debe tener al menos 6 caracteres";
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const submit = async () => {
-    setFieldErrors({});
+    if (!validate()) return;
     setToast(null);
     setLoading(true);
 
