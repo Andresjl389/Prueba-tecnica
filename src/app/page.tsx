@@ -47,9 +47,11 @@ export default function LoginPage() {
       setTimeout(() => {
         window.location.href = redirect;
       }, 800);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const message =
-        err?.message ?? "No se pudo iniciar sesión. Verifica tus credenciales.";
+        err instanceof Error
+          ? err.message
+          : "No se pudo iniciar sesión. Verifica tus credenciales.";
       showToast("error", message);
     } finally {
       setLoading(false);
