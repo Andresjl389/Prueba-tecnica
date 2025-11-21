@@ -31,13 +31,16 @@ Usa tus credenciales reales de base de datos; el secreto puede ser cualquier str
 3) Instala dependencias  
 `npm install`
 
-4) Aplica el esquema de base de datos  
+4) Genera el cliente de Prisma  
+`npx prisma generate`
+
+5) Aplica el esquema de base de datos  
 `npx prisma migrate deploy`
 
-5) (Opcional) Carga datos de ejemplo: roles, usuarios y 5 solicitudes distribuidas  
+6) (Opcional) Carga datos de ejemplo: roles, usuarios y 5 solicitudes distribuidas  
 `npm run seed`
 
-6) Levanta el proyecto en dev  
+7) Levanta el proyecto en dev  
 `npm run dev`  
 Disponible en `http://localhost:3000`.
 
